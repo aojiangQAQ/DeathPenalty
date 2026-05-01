@@ -1,0 +1,37 @@
+name: DeathPenalty
+version: '1.1.0'
+main: cn.shuguang.deathpenalty.DeathPenalty
+api-version: '1.16'
+description: 死亡惩罚插件 - 玩家死亡自动扣除金钱和经验值
+author: 鳌江
+website: https://github.com/shuguang-team/DeathPenalty
+
+# 运行时依赖（必须先加载 Vault）
+depend:
+  - Vault
+
+# 软依赖（可选，支持以下经济插件）
+softdepend:
+  - EssentialsX
+  - CMI
+  - PlayerPoints
+
+commands:
+  deathpenalty:
+    description: DeathPenalty 管理指令
+    usage: /deathpenalty <子命令>
+    aliases: [dp, dpenalty]
+    permission: deathpenalty.admin
+
+permissions:
+  deathpenalty.admin:
+    description: 使用 DeathPenalty 管理指令
+    default: op
+
+  deathpenalty.bypass:
+    description: 死亡时免于所有惩罚（金钱+经验）
+    default: false
+
+  deathpenalty.bypass-exp:
+    description: 死亡时仅免于经验值惩罚
+    default: false
