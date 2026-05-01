@@ -1,25 +1,72 @@
 # DeathPenalty - 死亡经济惩罚插件
 
-> **制作团队**：曙光团队  
-> **制作人**：鳌江  
-> **版本**：1.0.0  
-> **适用服务端**：Paper / Arclight 1.16.5  
-> **依赖**：Vault + 任意兼容 Vault 的经济插件（如 EssentialsX）
+![Minecraft](https://img.shields.io/badge/Minecraft-1.16.5-green)
+![Paper/Arclight](https://img.shields.io/badge/Paper%2FArclight-Compatible-blue)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+> **DeathPenalty**（死亡惩罚）是一个为 Minecraft 服务器设计的经济惩罚插件。玩家死亡时按百分比或固定金额扣除金币，支持 Vault 经济插件，完美兼容 Arclight 混合核心。
 
 ---
 
-## 功能介绍
+## ✨ 功能亮点
 
-- 玩家以任何方式死亡（PvP / PvE / 虚空 / 窒息等）均触发扣款
-- 支持 **百分比** 和 **固定金额** 两种扣款模式
-- 余额不足时不会扣成负数
-- 支持权限豁免（`deathpenalty.bypass`）
-- 管理员指令支持热重载、实时修改配置、模拟测试
-- 完全支持 Arclight 混合核心（Mod + 插件同服）
+- **灵活扣款模式**  
+  支持 **百分比** 和 **固定金额** 两种扣款模式，可在配置文件中自由切换
+
+- **智能余额保护**  
+  余额不足时不会扣成负数，确保玩家账户安全
+
+- **权限豁免**  
+  拥有 `deathpenalty.bypass` 权限的玩家可免于死亡扣款
+
+- **完整管理指令**  
+  支持热重载、实时修改配置、模拟测试扣款效果
+
+- **Arclight 完美兼容**  
+  纯 Bukkit/Spigot API 实现，不依赖 NMS，在 Forge + Paper 混合核心下稳定运行
+
+- **事件优先级可调**  
+  若服务器同时运行带死亡逻辑的 Mod，建议将事件优先级保持为 `MONITOR` 以避免冲突
 
 ---
 
-## 安装步骤
+## 📂 目录结构
+
+```
+DeathPenalty/
+├── pom.xml
+├── README.md
+├── LICENSE
+├── .gitignore
+└── src/
+    └── main/
+        ├── java/
+        │   └── com/shuguangteam/deathpenalty/...
+        └── resources/
+            ├── plugin.yml
+            └── config.yml
+```
+
+---
+
+## 🛠 本地构建
+
+确保使用 **JDK 8+** 和 **Maven 3.6+**：
+
+```bash
+# 克隆仓库
+git clone https://github.com/aojiangQAQ/DeathPenalty.git
+cd DeathPenalty
+
+# Maven 打包
+mvn clean package
+
+# 生成 target/DeathPenalty-1.0.0.jar
+```
+
+---
+
+## 🚀 安装与配置
 
 ### 前置依赖
 
@@ -28,51 +75,16 @@
 | **Vault** | 必须 |
 | **EssentialsX** / CMI / 其他经济插件 | 提供实际的经济系统 |
 
-### 编译打包（本地 Maven）
+### 安装步骤
 
-```bash
-# 进入项目目录
-cd DeathPenalty
-
-# 使用 Maven 打包
-mvn clean package
-
-# 输出文件位于
-target/DeathPenalty-1.0.0.jar
-```
-
-> 需要 JDK 8 和 Maven 3.6+
-
-### 部署
-
-1. 将 `DeathPenalty-1.0.0.jar` 复制到服务器 `plugins/` 目录
-2. 确保 `Vault.jar` 和经济插件（如 `EssentialsX.jar`）已安装
-3. 启动或重启服务器
-4. 配置文件自动生成于 `plugins/DeathPenalty/config.yml`
+1. 确保服务器已安装 **Vault** 及经济插件（如 EssentialsX）
+2. 将 `DeathPenalty-1.0.0.jar` 复制到服务器 `plugins/` 目录
+3. 启动或重启服务器，`plugins/DeathPenalty/config.yml` 自动生成
+4. 根据需要修改配置，执行 `/dp reload` 生效
 
 ---
 
-## 配置文件说明
-
-```yaml
-penalty:
-  mode: percent        # percent=百分比，fixed=固定金额
-  percent: 15.0        # 百分比模式：扣除余额的 15%
-  fixed-amount: 1000.0 # 固定模式：每次扣除 1000 金币
-
-broadcast:
-  enabled: false        # 是否全服广播
-  message: "..."        # 广播内容（支持 {player}/{amount} 变量）
-
-messages:
-  death-penalty: "..."  # 死亡时发给玩家的提示
-  show-no-balance: true
-  no-balance: "..."     # 余额为零时的提示
-```
-
----
-
-## 指令一览
+## 📝 指令 & 权限
 
 | 指令 | 权限 | 说明 |
 |------|------|------|
@@ -83,9 +95,7 @@ messages:
 | `/dp setfixed <金额>` | `deathpenalty.admin` | 设置固定金额 |
 | `/dp test <玩家名>` | `deathpenalty.admin` | 对在线玩家模拟扣款 |
 
----
-
-## 权限节点
+### 权限节点
 
 | 权限 | 默认 | 说明 |
 |------|------|------|
@@ -94,20 +104,52 @@ messages:
 
 ---
 
-## Arclight 兼容说明
+## 🔧 配置说明
 
-- 本插件仅使用 Bukkit/Spigot API，不依赖 NMS
-- 在 Arclight（Forge + Paper）环境下可正常加载
-- 若服务器同时运行带死亡逻辑的 Mod，建议将事件优先级保持为 `MONITOR`（默认）以避免冲突
+```yaml
+penalty:
+  mode: percent        # percent=百分比，fixed=固定金额
+  percent: 15.0        # 百分比模式：扣除余额的 15%
+  fixed-amount: 1000.0 # 固定模式：每次扣除 1000 金币
+
+broadcast:
+  enabled: false        # 是否全服广播
+  message: "&6{player} 死亡扣款 {amount} 金币"
+
+messages:
+  death-penalty: "&c你已扣除 {amount} 金币"
+  show-no-balance: true
+  no-balance: "&e你已身无分文"
+```
 
 ---
 
-## 更新日志
+## 🔧 开发环境
 
-### v1.0.0
-- 初始发布
-- 支持百分比 / 固定金额两种扣款模式
-- 完整指令系统 + Tab 补全
-- 余额为零保护
-- 权限豁免支持
-- Arclight 兼容
+- **Java:** 8+
+- **Build:** Maven 3.6+
+- **API:** Spigot / Paper API 1.16.5
+- **测试服务端:** Paper 1.16.5 / Arclight 1.16.5
+
+---
+
+## 🤝 贡献
+
+欢迎 Issue / PR！
+
+1. Fork 本仓库
+2. 创建新分支: `git checkout -b feature/awesome`
+3. 提交更改: `git commit -m "Add awesome feature"`
+4. 推送分支: `git push origin feature/awesome`
+5. 发起 Pull Request
+
+---
+
+## ⚖️ License
+
+DeathPenalty 使用 **MIT License**，详见 [LICENSE](LICENSE)。
+
+---
+
+> **制作团队**：曙光团队  
+> **制作人**：鳌江
